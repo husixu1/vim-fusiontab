@@ -1,7 +1,7 @@
 {
-  "name": "coc-exposejump",
+  "name": "coc-fusiontab",
   "version": "0.0.0-development",
-  "description": "Expose some internal states of coc.nvim.",
+  "description": "",
   "author": "Sixu Hu <husixu1@hotmail.com>",
   "license": "MIT",
   "main": "lib/index.js",
@@ -45,19 +45,19 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "coc-exposejump configuration",
+      "title": "coc-fusiontab configuration",
       "properties": {
-        "coc-exposejump.enabled": {
+        "coc-fusiontab.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Enable coc-exposejump extension"
+          "description": "Enable coc-fusiontab extension"
         }
       }
     },
     "commands": [
       {
-        "command": "coc-exposejump.Command",
-        "title": "coc-exposejump command title"
+        "command": "coc-fusiontab.Command",
+        "title": "coc-fusiontab command title"
       }
     ]
   }

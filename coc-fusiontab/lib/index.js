@@ -16,9 +16,7 @@ async function activate(context) {
     if (!isEnable) {
         return;
     }
-    context.subscriptions.push(coc_nvim_1.commands.registerCommand('coc-exposejump.info', async (direction) => {
-        //console.log((<any>snippetManager.getSession(workspace.bufnr)?.snippet)?.tmSnippet.placeholderInfo.all);
-        // console.log((<any>snippetManager.getSession(workspace.bufnr)?.snippet)?.tmSnippet);
+    context.subscriptions.push(coc_nvim_1.commands.registerCommand('coc-fusiontab.info', async (direction) => {
         const session = coc_nvim_1.snippetManager.getSession(coc_nvim_1.workspace.bufnr);
         const cur_tabstop = session === null || session === void 0 ? void 0 : session.placeholder;
         const target_tabstop = direction == 'forward'
@@ -47,9 +45,6 @@ async function activate(context) {
                 },
             }
             : null;
-    }));
-    context.subscriptions.push(coc_nvim_1.commands.registerCommand('coc-exposejump.backward_info', async () => {
-        return null;
     }));
 }
 exports.activate = activate;

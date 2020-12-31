@@ -1,14 +1,14 @@
-# coc-exposejump
+# coc-fusiontab
 
-Expose some internal states of coc.nvim.
+
 
 ## Install
 
-`:CocInstall coc-exposejump`
+`:CocInstall coc-fusiontab`
 
 ## Keymaps
 
-`nmap <silent> <C-l> <Plug>(coc-coc-exposejump-keymap)`
+`nmap <silent> <C-l> <Plug>(coc-coc-fusiontab-keymap)`
 
 ## Lists
 

@@ -9,9 +9,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   }
 
   context.subscriptions.push(
-    commands.registerCommand('coc-exposejump.info', async (direction: string) => {
-      //console.log((<any>snippetManager.getSession(workspace.bufnr)?.snippet)?.tmSnippet.placeholderInfo.all);
-      // console.log((<any>snippetManager.getSession(workspace.bufnr)?.snippet)?.tmSnippet);
+    commands.registerCommand('coc-fusiontab.info', async (direction: string) => {
       const session = snippetManager.getSession(workspace.bufnr);
       const cur_tabstop = session?.placeholder;
       const target_tabstop =
@@ -43,12 +41,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
             },
           }
         : null;
-    })
-  );
-
-  context.subscriptions.push(
-    commands.registerCommand('coc-exposejump.backward_info', async () => {
-      return null;
     })
   );
 }
