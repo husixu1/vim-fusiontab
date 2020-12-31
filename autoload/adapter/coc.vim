@@ -34,7 +34,6 @@ function adapter#coc#backward_info()
 endfunction
 
 function adapter#coc#backward_jumpable()
-    echom "asdfafda"
     return CocAction("runCommand", "coc-fusiontab.backward-jumpable")
 endfunction
 

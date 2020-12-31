@@ -55,8 +55,6 @@ function s:do_jump(direction)
         endif
     endfor
 
-    echom line('.') col('.') jumpables
-
     if len(jumpables) == 0
         " if cannot jump, just return
         return [v:false]
@@ -71,7 +69,6 @@ function s:do_jump(direction)
         let infos[plugin] = adapter#{plugin}#{a:direction}_info()
     endfor
 
-    echom infos
     " decide which plugin to jump
     let min_vert_distance = 0x7fffffff
     let min_hori_distance = 0x7fffffff
@@ -102,7 +99,6 @@ function s:do_jump(direction)
             endif
         endfor
         if shortcut
-            echom "shortcut jump with:" plugin
             return [v:true, adapter#{plugin}#jump{a:direction}()]
         endif
     endfor
@@ -144,8 +140,6 @@ function s:do_jump(direction)
         end
     endfor
 
-    echom "fbo" forward_plugin backward_plugin overlap_plugins
-
     " If all plugins are in the same direction, jump onto the closest one
     let opposite = (a:direction == 'forward' ? 'backward' : forward)
     if {a:direction}_plugin != v:none && {opposite}_plugin == v:none && len(overlap_plugins) == 0
@@ -174,7 +168,6 @@ function s:do_jump(direction)
 
     " jump with the plugin which has the closet tabstop
     if smallest_plugin != v:none
-        echom "jump with:" smallest_plugin
         return [v:true, adapter#{smallest_plugin}#jump{a:direction}()]
     endif
     return [v:false]
@@ -191,9 +184,7 @@ endfunction
 " Fusioned tab
 " =============================================================================
 function fusiontab#handle_tab(fallback)
-    echom "-> Tab"
     for action in g:fusiontab_actions
-        echom "--> try" action
         let result = <SID>{action}()
         if result[0]
             return result[1]
