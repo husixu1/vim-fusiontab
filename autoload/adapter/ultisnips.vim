@@ -14,15 +14,14 @@ function adapter#ultisnips#expand()
         if pumvisible()
             py3 UltiSnips_Manager._cursor_moved()
         endif
-        call UltiSnips#ExpandSnippet()
+        return UltiSnips#ExpandSnippet()
     elseif mode() == 'v' || mode() == 's'
-        call feedkeys("\<Plug>(ultisnips_expand)", "t")
+        return "\<Esc>:call UltiSnips#ExpandSnippet()\<CR>"
     endif
 endfunction
 
 " Jump
 " =============================================================================
-
 function s:jump_info(direction)
 " get and return the location of the current, next tabstop, and
 py3 << EOF
@@ -72,10 +71,9 @@ endfunction
 
 function adapter#ultisnips#jumpforward()
     if mode() =~ '^i'
-        call UltiSnips#JumpForwards()
+        return UltiSnips#JumpForwards()
     elseif mode() == 'v' || mode() == 's'
-        " TODO: change this to original definition
-        call feedkeys("\<Plug>(ultisnips_forward)", "t")
+        return "\<Esc>:call UltiSnips#JumpForwards()\<CR>"
     endif
 endfunction
 
@@ -97,9 +95,9 @@ endfunction
 
 function adapter#ultisnips#jumpbackward()
     if mode() =~ '^i'
-        call UltiSnips#JumpBackwards()
+        return UltiSnips#JumpBackwards()
     elseif mode() == 'v' || mode() == 's'
-        call feedkeys("\<Plug>(ultisnips_backward)", "t")
+        return "\<Esc>:call UltiSnips#JumpBackwards()\<CR>"
     endif
 endfunction
 

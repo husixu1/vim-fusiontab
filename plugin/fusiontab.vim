@@ -1,41 +1,50 @@
-" A small plugin to help fusion the expansion and jump action of different
-" plugins into the same key.
-"
-" (Currently only supports ultisnips and coc.nvim :P)
-" (Accesses internal states of both plugins, kinda hacky)
-
 if exists("g:loaded_fusiontab")
     finish
 endif
+
 let g:loaded_fusiontab = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-let g:fusiontab_actions = [ 'expand', 'jumpforward' ] ", 'scroll']
-let g:fusiontab_s_actions = [ 'jumpbackward' ] ", 'scroll']
+if !exists('g:fusiontab_actions')
+    let g:fusiontab_actions = [ 'expand', 'jumpforward' ]
+endif
 
-let g:fusiontab_enable_default_map = 1
-let g:fusiontab_noexpand_after = {
-            \ 'ultisnips' : ['(', '[', '{', '"', "'", '`'],
-            \ 'coc' : [],
-            \ }
-let g:fusiontab_fusioned_plugins = [ 'ultisnips', 'coc' ]
+if !exists('g:fusiontab_s_actions')
+    let g:fusiontab_s_actions = [ 'jumpbackward' ]
+endif
 
-" overwrite some ultisnips settings
-" TODO: remove these, use mapped functions instead
-let g:UltiSnipsExpandTrigger        = "<Plug>(ultisnips_expand)"
-let g:UltiSnipsJumpForwardTrigger   = "<Plug>(ultisnips_forward)"
-let g:UltiSnipsJumpBackwardTrigger  = "<Plug>(ultisnips_backward)"
-let g:UltiSnipsListSnippets         = "<Plug>(ultisnips_list)"
+if !exists('g:fusiontab_fusioned_plugins')
+    let g:fusiontab_fusioned_plugins = [ 'ultisnips', 'coc' ]
+endif
+
+if !exists('g:fusiontab_enable_default_map')
+    let g:fusiontab_enable_default_map = 1
+endif
+
+if !exists('g:fusiontab_noexpand_after')
+    let g:fusiontab_noexpand_after = {'ultisnips' : [], 'coc' : []}
+endif
+
+" import coc plugin if coc is enabled
+if index(g:fusiontab_fusioned_plugins, 'coc') >= 0
+    exe 'set rtp+=' . expand('<sfile>:p:h') . '/../coc-fusiontab'
+endif
+
+" overwrite some ultisnips settings, to avoid tab conflict
+let g:UltiSnipsExpandTrigger        = "<NUL>"
+let g:UltiSnipsJumpForwardTrigger   = "<NUL>"
+let g:UltiSnipsJumpBackwardTrigger  = "<NUL>"
+let g:UltiSnipsListSnippets         = "<NUL>"
 let g:UltiSnipsRemoveSelectModeMappings = 0
 
 if g:fusiontab_enable_default_map
-    inoremap <Tab>   <C-r>=fusiontab#handle_tab()<CR>
-    inoremap <S-Tab> <C-r>=fusiontab#handle_s_tab()<CR>
-    xnoremap <expr> <Tab>   fusiontab#handle_tab()
-    xnoremap <expr> <S-Tab> fusiontab#handle_s_tab()
-    snoremap <expr> <Tab>   fusiontab#handle_tab()
-    snoremap <expr> <S-Tab> fusiontab#handle_s_tab()
+    inoremap <Tab>   <C-r>=fusiontab#handle_tab("\<Tab>")<CR>
+    inoremap <S-Tab> <C-r>=fusiontab#handle_s_tab("\<S-Tab>")<CR>
+    xnoremap <expr> <Tab>   fusiontab#handle_tab("\<Tab>")
+    xnoremap <expr> <S-Tab> fusiontab#handle_s_tab("\<S-Tab>")
+    snoremap <expr> <Tab>   fusiontab#handle_tab("\<Tab>")
+    snoremap <expr> <S-Tab> fusiontab#handle_s_tab("\<S-Tab>")
 endif
 
 let &cpo = s:save_cpo

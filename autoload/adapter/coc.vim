@@ -5,37 +5,44 @@ function adapter#coc#expandable()
 endfunction
 
 function adapter#coc#expand()
-    let res = coc#_select_confirm()
-    call feedkeys(res, 'n')
+    return coc#_select_confirm()
 endfunction
 
 " Jump
 " =============================================================================
 function adapter#coc#forward_info()
     " get and return the info necessary for forward jumping
-    return CocAction("runCommand", "coc-exposejump.info", 'forward')
+    return CocAction("runCommand", "coc-fusiontab.info", 'forward')
 endfunction
 
 function adapter#coc#forward_jumpable()
-    " TODO: a more precise definition
     return coc#jumpable()
 endfunction
 
 function adapter#coc#jumpforward()
-    call coc#rpc#request('snippetNext', [])
+    if mode() =~ '^i'
+        return coc#rpc#request('snippetNext', [])
+    elseif mode() == 'v' || mode() == 's'
+        " We must return the complete keyseq to ensure correct target position.
+        return "\<Esc>:call coc#rpc#request('snippetNext', [])\<CR>"
+    endif
 endfunction
 
 function adapter#coc#backward_info()
     " get and return the info necessary for forward jumping
-    return CocAction("runCommand", "coc-exposejump.info", 'backward')
+    return CocAction("runCommand", "coc-fusiontab.info", 'backward')
 endfunction
 
 function adapter#coc#backward_jumpable()
-    " TODO: a more precise definition
-    return coc#jumpable()
+    echom "asdfafda"
+    return CocAction("runCommand", "coc-fusiontab.backward-jumpable")
 endfunction
 
 function adapter#coc#jumpbackward()
-    call coc#rpc#request('snippetPrev', [])
+    if mode() =~ '^i'
+        return coc#rpc#request('snippetPrev', [])
+    elseif mode() == 'v' || mode() == 's'
+        return "\<Esc>:call coc#rpc#request('snippetPrev', [])\<CR>"
+    endif
 endfunction
 

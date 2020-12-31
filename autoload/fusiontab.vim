@@ -20,7 +20,8 @@ function s:expand()
         let candidate = getline('.')[column - s:noexpand_maxbytes[plugin] - 1 : column - 2]
 
         " If the string before the cursor matches prefix, avoid expanding.
-        if s:noexpand_maxbytes[plugin] > 0 && col('.') > 1
+        if s:noexpand_maxbytes[plugin] > 0 && col('.') > 1 &&
+                    \ has_key(g:fusiontab_noexpand_after, plugin)
             for prefix in g:fusiontab_noexpand_after[plugin]
                 if match(l:candidate, prefix . '$') != -1
                     let noexpand_match = v:true
@@ -29,14 +30,13 @@ function s:expand()
             endfor
         endif
         if noexpand_match
-            return v:false
+            return [v:false]
         endif
 
         " Expand and return
-        call adapter#{plugin}#expand()
-        return v:true
+        return [v:true, adapter#{plugin}#expand()]
     endfor
-    return v:false
+    return [v:false]
 endfunction
 
 " Fusioned jump
@@ -46,11 +46,11 @@ function s:new_tabstop(line_s, line_e, col_s, col_e)
 endfunction
 
 function s:do_jump(direction)
-    " TODO decide which jump to call
+    " decide which jump to call
     let jumpables = []
     for plugin in g:fusiontab_fusioned_plugins
         " skip unjumpable plugins
-        if adapter#{plugin}#forward_jumpable()
+        if adapter#{plugin}#{a:direction}_jumpable()
             let jumpables += [plugin]
         endif
     endfor
@@ -59,11 +59,10 @@ function s:do_jump(direction)
 
     if len(jumpables) == 0
         " if cannot jump, just return
-        return v:false
+        return [v:false]
     elseif len(jumpables) == 1
         " if only one plugin can jump, then just use that plugin to jump
-        call adapter#{jumpables[0]}#jump{a:direction}()
-        return v:true
+        return [v:true, adapter#{jumpables[0]}#jump{a:direction}()]
     endif
 
     " collect jump infos from each candidates
@@ -104,8 +103,7 @@ function s:do_jump(direction)
         endfor
         if shortcut
             echom "shortcut jump with:" plugin
-            call adapter#{plugin}#jump{a:direction}()
-            return v:true
+            return [v:true, adapter#{plugin}#jump{a:direction}()]
         endif
     endfor
 
@@ -151,14 +149,11 @@ function s:do_jump(direction)
     " If all plugins are in the same direction, jump onto the closest one
     let opposite = (a:direction == 'forward' ? 'backward' : forward)
     if {a:direction}_plugin != v:none && {opposite}_plugin == v:none && len(overlap_plugins) == 0
-        call adapter#{{a:direction}_plugin}#jump{a:direction}()
-        return v:true
+        return [v:true, adapter#{{a:direction}_plugin}#jump{a:direction}()]
     elseif {a:direction}_plugin == v:none && {opposite}_plugin != v:none && len(overlap_plugins) == 0
-        call adapter#{{opposite}_plugin}#jump{a:direction}()
-        return v:true
+        return [v:true, adapter#{{opposite}_plugin}#jump{a:direction}()]
     elseif {a:direction}_plugin == v:none && {opposite}_plugin == v:none && len(overlap_plugins) == 1
-        call adapter#{overlap_plugins[0]}#jump{a:direction}()
-        return v:true
+        return [v:true, adapter#{overlap_plugins[0]}#jump{a:direction}()]
     endif
 
     " For plugins that is in different directions, jump to the plugins with
@@ -180,10 +175,9 @@ function s:do_jump(direction)
     " jump with the plugin which has the closet tabstop
     if smallest_plugin != v:none
         echom "jump with:" smallest_plugin
-        call adapter#{smallest_plugin}#jump{a:direction}()
-        return v:true
+        return [v:true, adapter#{smallest_plugin}#jump{a:direction}()]
     endif
-    return v:false
+    return [v:false]
 endfunction
 
 function s:jumpforward()
@@ -196,24 +190,28 @@ endfunction
 
 " Fusioned tab
 " =============================================================================
-function fusiontab#handle_tab()
+function fusiontab#handle_tab(fallback)
+    echom "-> Tab"
     for action in g:fusiontab_actions
-        if <SID>{action}()
-            return ""
+        echom "--> try" action
+        let result = <SID>{action}()
+        if result[0]
+            return result[1]
         endif
     endfor
     " fallback to default key
-    " TODO: not necessarily tab
-    return "\<Tab>"
+    return a:fallback
 endfunction
 
-function fusiontab#handle_s_tab()
+function fusiontab#handle_s_tab(fallback)
     for action in g:fusiontab_s_actions
-        if <SID>{action}()
-            return ""
+        let result = <SID>{action}()
+        if result[0]
+            return result[1]
         endif
     endfor
-    return "\<S-Tab>"
+    " fallback to default key
+    return a:fallback
 endfunction
 
 " Util functions

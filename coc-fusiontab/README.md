@@ -1,18 +1,6 @@
 # coc-fusiontab
 
-
-
-## Install
-
-`:CocInstall coc-fusiontab`
-
-## Keymaps
-
-`nmap <silent> <C-l> <Plug>(coc-coc-fusiontab-keymap)`
-
-## Lists
-
-`:CocList demo_list`
+A coc.nvim plugin that exposes some internal states of coc.nvim for fusiontab.
 
 ## License
 

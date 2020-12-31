@@ -41,6 +41,17 @@ export async function activate(context: ExtensionContext): Promise<void> {
             },
           }
         : null;
+    }),
+    commands.registerCommand('coc-fusiontab.backward-jumpable', async () => {
+      const session = snippetManager.getSession(workspace.bufnr);
+      if (!session) {
+        return false;
+      }
+      const placeholder = session.placeholder;
+      if (placeholder && placeholder.index != 0) {
+        return true;
+      }
+      return false;
     })
   );
 }
