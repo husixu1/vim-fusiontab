@@ -1,9 +1,7 @@
 " Expand
 " =============================================================================
 function adapter#ultisnips#expandable()
-    return !(col('.') <= 1
-                \ || !empty(matchstr(getline('.'), '\%' . (col('.') - 1) . 'c\s'))
-                \ || empty(UltiSnips#SnippetsInCurrentScope()))
+    return mode()->tolower() == 'v' || UltiSnips#CanExpandSnippet()
 endfunction
 
 function adapter#ultisnips#expand()
@@ -15,7 +13,9 @@ function adapter#ultisnips#expand()
             py3 UltiSnips_Manager._cursor_moved()
         endif
         return UltiSnips#ExpandSnippet()
-    elseif mode() == 'v' || mode() == 's'
+    elseif mode()->tolower() == 'v'
+        return ":call UltiSnips#SaveLastVisualSelection()\<CR>gvs"
+    elseif mode()->tolower() == 's'
         return "\<Esc>:call UltiSnips#ExpandSnippet()\<CR>"
     endif
 endfunction
@@ -62,11 +62,7 @@ EOF
 endfunction
 
 function adapter#ultisnips#forward_jumpable()
-py3 << trim EOF
-    from UltiSnips import UltiSnips_Manager;
-    vim.command("let jumpable = {}".format('v:true' if len(UltiSnips_Manager._active_snippets) > 0 else 'v:false'))
-EOF
-    return jumpable
+    return UltiSnips#CanJumpForwards()
 endfunction
 
 function adapter#ultisnips#forward_info()
@@ -82,16 +78,7 @@ function adapter#ultisnips#jumpforward()
 endfunction
 
 function adapter#ultisnips#backward_jumpable()
-    let res = v:false
-py3 << trim EOF
-    from UltiSnips import UltiSnips_Manager
-    if len(UltiSnips_Manager._active_snippets) > 0:
-        cur_snip = UltiSnips_Manager._current_snippet
-        if cur_snip is not None and \
-                cur_snip._get_prev_tab(cur_snip._cts) is not None:
-            vim.command('let res = v:true')
-EOF
-    return res
+    return UltiSnips#CanJumpBackwards()
 endfunction
 
 function adapter#ultisnips#backward_info()
