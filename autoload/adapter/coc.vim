@@ -1,7 +1,7 @@
 " Expand
 " =============================================================================
 function adapter#coc#expandable()
-    return pumvisible()
+    return pumvisible() && (complete_info(["selected"]).selected != -1)
 endfunction
 
 function adapter#coc#expand()
