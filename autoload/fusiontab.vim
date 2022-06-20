@@ -79,7 +79,7 @@ function s:do_jump(direction)
     for [plugin, info] in items(infos)
         if (info.cur.le - info.cur.ls) == min_vert_distance &&
          \ (info.cur.ce - info.cur.cs) == min_hori_distance
-            smallest_plugins += [plugin]
+            let smallest_plugins += [plugin]
         elseif (info.cur.le - info.cur.ls) <= min_vert_distance &&
              \ (info.cur.ce - info.cur.cs) <= min_hori_distance
             let min_vert_distance = info.cur.le - info.cur.ls
@@ -156,6 +156,7 @@ function s:do_jump(direction)
     let smallet_plugin = v:none
     let min_vert_size = 0x7fffffff
     let min_hori_size = 0x7fffffff
+    let smallest_plugin = v:none
     for plugin in overlap_plugins
         if infos[plugin].range.le - infos[plugin].range.ls < min_vert_size || (
                     \ infos[plugin].range.le - infos[plugin].range.ls == min_vert_size &&
@@ -223,7 +224,7 @@ function s:relative_position(range_a, range_b)
             return 'contained'
         else
             return 'overlap'
-        fi
+        endif
     elseif a:range_a.ls <= a:range_b.ls && a:range_a.le >= a:range_b.le
                 \ && a:range_a.cs <= a:range_b.cs && a:range_a.ce >= a:range_b.ce
         return 'contains'
