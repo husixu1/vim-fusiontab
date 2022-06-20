@@ -32,10 +32,10 @@ if index(g:fusiontab_fusioned_plugins, 'coc') >= 0
 endif
 
 " overwrite some ultisnips settings, to avoid tab conflict
-let g:UltiSnipsExpandTrigger        = "<NUL>"
-let g:UltiSnipsJumpForwardTrigger   = "<NUL>"
-let g:UltiSnipsJumpBackwardTrigger  = "<NUL>"
-let g:UltiSnipsListSnippets         = "<NUL>"
+let g:UltiSnipsExpandTrigger        = "<Plug>(ultisnips_expand)"
+let g:UltiSnipsJumpForwardTrigger   = "<Plug>(ultisnips_expand)"
+let g:UltiSnipsJumpBackwardTrigger  = "<Plug>(ultisnips_backward)"
+let g:UltiSnipsListSnippets         = "<Plug>(ultisnips_list)"
 let g:UltiSnipsRemoveSelectModeMappings = 0
 
 if g:fusiontab_enable_default_map
