@@ -9,10 +9,11 @@ function adapter#ultisnips#expand()
         " This worksaround the ultisnips bug where the ultisnips cursor
         " state is not updated when trying to expand via
         " UltiSnips#ExpandSnippet() while coc completion menu is available.
-        if pumvisible()
+        ""if pumvisible()
+        if coc#pum#visible()
             py3 UltiSnips_Manager._cursor_moved()
         endif
-        return UltiSnips#ExpandSnippet()
+        return "\<C-r>=UltiSnips#ExpandSnippet()\<CR>"
     elseif mode()->tolower() == 'v'
         return ":call UltiSnips#SaveLastVisualSelection()\<CR>gvs"
     elseif mode()->tolower() == 's'
@@ -73,7 +74,7 @@ endfunction
 
 function adapter#ultisnips#jumpforward()
     if mode() =~ '^i'
-        return UltiSnips#JumpForwards()
+        return "\<C-r>=UltiSnips#JumpForwards()\<CR>"
     elseif mode() == 'v' || mode() == 's'
         return "\<Esc>:call UltiSnips#JumpForwards()\<CR>"
     endif
@@ -89,7 +90,7 @@ endfunction
 
 function adapter#ultisnips#jumpbackward()
     if mode() =~ '^i'
-        return UltiSnips#JumpBackwards()
+        return "\<C-r>=UltiSnips#JumpBackwards()\<CR>"
     elseif mode() == 'v' || mode() == 's'
         return "\<Esc>:call UltiSnips#JumpBackwards()\<CR>"
     endif

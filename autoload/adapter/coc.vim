@@ -1,7 +1,7 @@
 " Expand
 " =============================================================================
 function adapter#coc#expandable()
-    return pumvisible() && (complete_info(["selected"]).selected != -1)
+    return coc#pum#visible()
 endfunction
 
 function adapter#coc#expand()
@@ -20,11 +20,12 @@ function adapter#coc#forward_jumpable()
 endfunction
 
 function adapter#coc#jumpforward()
+    echom "Snippet next"
     if mode() =~ '^i'
-        return coc#rpc#request('snippetNext', [])
+        return "\<C-r>=coc#snippet#next()\<CR>"
     elseif mode() == 'v' || mode() == 's'
         " We must return the complete keyseq to ensure correct target position.
-        return "\<Esc>:call coc#rpc#request('snippetNext', [])\<CR>"
+        return "\<Esc>:call coc#snippet#next()\<CR>"
     endif
 endfunction
 
@@ -39,9 +40,9 @@ endfunction
 
 function adapter#coc#jumpbackward()
     if mode() =~ '^i'
-        return coc#rpc#request('snippetPrev', [])
+        return "\<C-r>=coc#snippet#prev()\<CR>"
     elseif mode() == 'v' || mode() == 's'
-        return "\<Esc>:call coc#rpc#request('snippetPrev', [])\<CR>"
+        return "\<Esc>:call coc#snippet#prev()\<CR>"
     endif
 endfunction
 

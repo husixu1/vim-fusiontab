@@ -41,8 +41,8 @@ let g:UltiSnipsRemoveSelectModeMappings = 0
 if g:fusiontab_enable_default_map
     " ultisnips requires mapping select mode and visual mode separately.
     " see https://github.com/roxma/nvim-completion-manager/issues/38
-    inoremap <Tab>   <C-r>=fusiontab#handle_tab("\<Tab>")<CR>
-    inoremap <S-Tab> <C-r>=fusiontab#handle_s_tab("\<S-Tab>")<CR>
+    inoremap <expr> <Tab>   fusiontab#handle_tab("\<Tab>")
+    inoremap <expr> <S-Tab> fusiontab#handle_s_tab("\<S-Tab>")
     xnoremap <expr> <Tab>   fusiontab#handle_tab("\<Tab>")
     xnoremap <expr> <S-Tab> fusiontab#handle_s_tab("\<S-Tab>")
     snoremap <expr> <Tab>   fusiontab#handle_tab("\<Tab>")
