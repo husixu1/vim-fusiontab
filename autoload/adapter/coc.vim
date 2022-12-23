@@ -1,11 +1,11 @@
 " Expand
 " =============================================================================
 function adapter#coc#expandable()
-    return coc#pum#visible()
+    return coc#pum#visible() && coc#pum#info()['index'] >= 0
 endfunction
 
 function adapter#coc#expand()
-    return coc#_select_confirm()
+    return coc#pum#confirm()
 endfunction
 
 " Jump
